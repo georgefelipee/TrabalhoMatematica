@@ -59,7 +59,7 @@ function generateMegaSenaNumbers() {
 const megaSenaNumbers = generateMegaSenaNumbers();
 
 // Adicione os números gerados ao banco de dados JSON
-addMegaSenaNumbers([94, 35, 84, 27, 30, 72]);
+addMegaSenaNumbers(megaSenaNumbers);
 
 // Exiba os números gerados no console
 console.log("Números da Mega-Sena:");
