@@ -40,14 +40,24 @@ function addMegaSenaNumbers(newNumbers) {
 
 // Função para gerar um número inteiro aleatório entre min e max (inclusive)
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const a = 1664525;
+  const c = 1013904223;
+  const m = 2 ** 32; // Módulo
+  const seed = Date.now();
+  let x = seed;
+
+  x = (a * x + c) % m;
+  const randomNumber = min + (x % (max - min + 1));
+  return Math.floor(randomNumber);
+ 
 }
 
 // Função para gerar um conjunto de seis números aleatórios exclusivos
 function generateMegaSenaNumbers() {
   const numbers = [];
   while (numbers.length < 6) {
-    const randomNumber = getRandomInt(1, 99);
+    const randomNumber = getRandomInt(1, 60);
     if (!numbers.includes(randomNumber)) {
       numbers.push(randomNumber);
     }
@@ -63,4 +73,4 @@ addMegaSenaNumbers(megaSenaNumbers);
 
 // Exiba os números gerados no console
 console.log("Números da Mega-Sena:");
-console.log(megaSenaNumbers.sort((a, b) => a - b).join(" - "));
+console.log(megaSenaNumbers.join(" - "));
