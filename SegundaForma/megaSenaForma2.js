@@ -1,6 +1,6 @@
 const jsonfile = require("jsonfile");
 const databaseFile = "megasena_db.json";
-
+const crypto = require('crypto')
 function readDatabase() {
   try {
     return jsonfile.readFileSync(databaseFile);
@@ -41,39 +41,32 @@ function addMegaSenaNumbers(newNumbers) {
   writeDatabase(database);
 }
 
-// Função para gerar um número inteiro aleatório entre min e max (inclusive)
-function getRandomInt(min, max) {
-
-  const a = 1664525;
-  const c = 1013904223;
-  const m = 2 ** 32; // Módulo
-  const seed = Date.now();
-  let x = seed;
-
-  x = (a * x + c) % m;
-  const randomNumber = min + (x % (max - min + 1));
-  return Math.floor(randomNumber);
- 
-}
-
-// Função para gerar um conjunto de seis números aleatórios exclusivos
-function generateMegaSenaNumbers() {
-  const numbers = [];
-  while (numbers.length < 6) {
-    const randomNumber = getRandomInt(1, 60);
-    if (!numbers.includes(randomNumber)) {
-      numbers.push(randomNumber);
-    }
+// Função para gerar um número inteiro aleatório entre min e max (inclusive) usando criptografia como fonte de entropia
+function getRandomIntWithEntropy(min, max) {
+    const byteArray = crypto.randomBytes(4); // Gere 4 bytes de entropia
+    const randomInt = byteArray.readUInt32BE(0); // Converta os bytes em um número inteiro
+    return min + (randomInt % (max - min + 1));
   }
-  return numbers;
-}
+
+  // Função para gerar um conjunto de seis números aleatórios exclusivos usando a fonte de entropia
+function generateMegaSenaNumbersWithEntropy() {
+    const numbers = [];
+    while (numbers.length < 6) {
+      const randomNumber = getRandomIntWithEntropy(1, 60);
+      if (!numbers.includes(randomNumber)) {
+        numbers.push(randomNumber);
+      }
+    }
+    return numbers;
+  }
+
 
 // Gere os números da Mega-Sena
-const megaSenaNumbers = generateMegaSenaNumbers();
+const megaSenaNumbers = generateMegaSenaNumbersWithEntropy();
 
 // Adicione os números gerados ao banco de dados JSON
 addMegaSenaNumbers(megaSenaNumbers);
 
 // Exiba os números gerados no console
-console.log("Números da Mega-Sena:");
+console.log("Números da Mega-Sena Forma 2:");
 console.log(megaSenaNumbers.join(" - "));
